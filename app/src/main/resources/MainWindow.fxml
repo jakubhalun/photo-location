@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1" spacing="10" alignment="CENTER" fillWidth="true" padding="10">
+
+    <TextFlow maxWidth="Infinity" style="-fx-border-color: lightgray; -fx-padding: 10;" onDragOver="#onDragOver" onDragDropped="#onJpegDrop">
+        <Text text="Drag and drop JPEG file for EXIF"/>
+    </TextFlow>
+
+    <TextFlow maxWidth="Infinity" style="-fx-border-color: lightgray; -fx-padding: 10;" onDragOver="#onDragOver" onDragDropped="#onKmlDrop">
+        <Text text="Drag and drop KML file"/>
+    </TextFlow>
+
+
+    <TextArea fx:id="formattedTextArea" wrapText="true" editable="false" style="-fx-border-color: lightgray;">
+        Awaiting dragged and dropped input
+    </TextArea>
+</VBox>
