@@ -1,43 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<VBox
+<GridPane
         xmlns:fx="http://javafx.com/fxml/1"
-        spacing="10"
-        alignment="CENTER"
-        fillWidth="true"
         fx:controller="pl.halun.tools.photo.location.MainWindowController"
+        alignment="CENTER"
+        hgap="10"
+        vgap="10"
 >
 
+    <!-- Define column constraints -->
+    <columnConstraints>
+        <ColumnConstraints percentWidth="50"/>
+        <ColumnConstraints percentWidth="50"/>
+    </columnConstraints>
+
+    <!-- Define row constraints -->
+    <rowConstraints>
+        <RowConstraints percentHeight="50"/>
+        <RowConstraints percentHeight="50"/>
+    </rowConstraints>
+
+    <!-- TextArea for JPEG -->
     <TextArea
             fx:id="jpegInputArea"
             wrapText="true"
             editable="false"
             style="-fx-border-color: lightgray;"
             onDragDropped="#onJpegDrop"
+            GridPane.rowIndex="0"
+            GridPane.columnIndex="0"
+            GridPane.columnSpan="1"
+            GridPane.rowSpan="1"
     >
         Drag and drop JPEG file for EXIF
     </TextArea>
 
+    <!-- TextArea for KML -->
     <TextArea
             fx:id="kmlInputArea"
             wrapText="true"
             editable="false"
             style="-fx-border-color: lightgray;"
             onDragDropped="#onKmlDrop"
+            GridPane.rowIndex="0"
+            GridPane.columnIndex="1"
+            GridPane.columnSpan="1"
+            GridPane.rowSpan="1"
     >
         Drag and drop KML file
     </TextArea>
 
-
+    <!-- Output TextArea -->
     <TextArea
             fx:id="outputTextArea"
             wrapText="true"
             editable="false"
             style="-fx-border-color: lightgray;"
+            GridPane.rowIndex="1"
+            GridPane.columnIndex="0"
+            GridPane.columnSpan="2"
+            GridPane.rowSpan="1"
     >
         Awaiting dragged and dropped input
     </TextArea>
-</VBox>
+</GridPane>
