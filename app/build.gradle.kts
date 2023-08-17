@@ -31,3 +31,9 @@ application {
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
+
+val javafxModules = arrayOf("controls", "fxml", "graphics")
+
+javafx {
+    modules = javafxModules.map { "javafx.$it" }
+}
