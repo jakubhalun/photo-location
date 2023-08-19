@@ -4,8 +4,15 @@ import javafx.fxml.FXML
 import javafx.scene.control.TextArea
 import javafx.scene.input.DragEvent
 import javafx.scene.input.Dragboard
+import pl.halun.tools.photo.location.jpegs.JpegReader
+import pl.halun.tools.photo.location.kmls.KmlReader
+import pl.halun.tools.photo.location.main.LocationInTimeTextProvider
 
-class MainWindowController {
+class MainWindowController(
+    private val locationInTimeTextProvider: LocationInTimeTextProvider,
+    private val jpegReader: JpegReader,
+    private val kmlReader: KmlReader
+) {
 
     @FXML
     lateinit var outputTextArea: TextArea
