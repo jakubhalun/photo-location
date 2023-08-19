@@ -5,6 +5,7 @@ import java.io.File
 import java.time.Instant
 
 class KmlReader {
+
     fun readTravelPoints(path: String): List<TravelPoint> {
         val file = File(path)
         if (!file.exists()) throw InvalidKmlInputFileException("File does not exist")
@@ -15,25 +16,33 @@ class KmlReader {
         } catch (e: Exception) {
             throw InvalidKmlInputFileException("Not a valid XML (KML) file")
         }
-        val coords = document.selectNodes("//gx:coord").map { it.text.trim() }
-        val times = document.selectNodes("//when").map { it.text.trim() }
+
+        // Handle namespaces for gx:coord within gx:Track
+        val xPathCoord = document.createXPath("//gx:Track/gx:coord")
+        xPathCoord.setNamespaceURIs(mapOf("gx" to "http://www.google.com/kml/ext/2.2"))
+        val coords = xPathCoord.selectNodes(document).map { it.text.trim() }
+
+        // Handle when elements within gx:Track using local-name to bypass namespaces
+        val xPathWhen = document.createXPath("//gx:Track/*[local-name()='when']")
+        val times = xPathWhen.selectNodes(document).map { it.text.trim() }
 
         if (coords.isEmpty()) {
             throw InvalidKmlInputFileException("Not a valid XML file - no gx:coord nodes")
         }
 
         if (coords.size != times.size) {
-            throw InvalidKmlInputFileException("Mismatched gx:coord and when elements count")
+            throw InvalidKmlInputFileException("Mismatched gx:coord (${coords.size}) and when (${times.size}) elements count")
         }
 
         return coords.zip(times).map { (coordinates, time) ->
             val parts = coordinates.split(" ").map { it.toDouble() }
             TravelPoint(
-                location = Location(longitude = parts[0], latitude = parts[1]),
+                location = Location(longitude = parts[1], latitude = parts[0]),
                 timeUtc = Instant.parse(time)
             )
         }
     }
+
 }
 
 data class Location(val longitude: Double, val latitude: Double)

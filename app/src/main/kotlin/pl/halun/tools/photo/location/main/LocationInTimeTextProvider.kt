@@ -37,4 +37,8 @@ class LocationInTimeTextProvider {
 
         return Duration.ofHours(hours.toLong()).plus(Duration.ofMinutes(minutes.toLong()))
     }
+
+    private fun readyToGenerateText() = travelPoints.isNotEmpty() && timeWithDuration != null
+
+
 }
