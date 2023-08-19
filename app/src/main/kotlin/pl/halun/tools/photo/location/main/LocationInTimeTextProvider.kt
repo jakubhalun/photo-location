@@ -6,7 +6,7 @@ import java.time.Instant
 
 class LocationInTimeTextProvider {
 
-    private var travel: List<TravelPoint>? = null
+    private var travelPoints: List<TravelPoint> = emptyList()
     private var time: Instant? = null
     private var differenceToUtc: Duration = Duration.ZERO
     private var timeWithDuration: Instant? = null
@@ -16,9 +16,9 @@ class LocationInTimeTextProvider {
         return time.toString()
     }
 
-    fun textForChangedLocations(): String {
-        // TODO
-        return "kml"
+    fun textForChangedLocations(travelPoints: List<TravelPoint>): String {
+        this.travelPoints = travelPoints
+        return travelPoints.first().toString()
     }
 
     fun textForChangedDifferenceToUtc(difference: String): String {

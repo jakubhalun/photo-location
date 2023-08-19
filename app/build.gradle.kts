@@ -12,6 +12,7 @@ dependencies {
     implementation("org.openjfx:javafx-controls:20.0.2")
     implementation("org.openjfx:javafx-fxml:20.0.2")
     implementation("com.drewnoakes:metadata-extractor:2.18.0")
+    implementation("org.dom4j:dom4j:2.1.4")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
