@@ -5,11 +5,11 @@ import pl.halun.tools.photo.location.kmls.KmlReader
 import pl.halun.tools.photo.location.main.LocationInTimeTextProvider
 
 class Configuration {
-    fun mainWindowController(
-        locationInTimeTextProvider: LocationInTimeTextProvider,
-        jpegReader: JpegReader,
-        kmlReader: KmlReader
-    ): MainWindowController =
-        MainWindowController(locationInTimeTextProvider, jpegReader, kmlReader)
 
+    fun locationInTimeTextProvider(): LocationInTimeTextProvider =
+        LocationInTimeTextProvider()
+
+    fun jpegReader(): JpegReader = JpegReader()
+
+    fun kmlReader(): KmlReader = KmlReader()
 }

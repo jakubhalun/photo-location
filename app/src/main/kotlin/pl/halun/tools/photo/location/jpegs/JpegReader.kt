@@ -3,7 +3,7 @@ package pl.halun.tools.photo.location.jpegs
 import java.time.Instant
 
 class JpegReader {
-    fun readCreationDate(path: String): Instant {
+    fun readCreationTime(path: String): Instant {
         // TODO
         return Instant.now()
     }
