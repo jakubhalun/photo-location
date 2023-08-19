@@ -84,7 +84,8 @@
         </padding>
         <ComboBox fx:id="timeZoneOffsetComboBox"
                   value="+00:00"
-                  items="${controller.timeZoneOffsets}">
+                  items="${controller.timeZoneOffsets}"
+                  onAction="#handleComboBoxChange">
         </ComboBox>
     </Pane>
 

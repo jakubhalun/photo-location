@@ -65,8 +65,7 @@ class MainWindowController {
     fun onJpegDrop(dragEvent: DragEvent) {
         val db: Dragboard = dragEvent.dragboard
         if (db.hasFiles()) {
-            val durationOffset = adjustTimeWithOffset()
-            loadJpegData(db.files[0].absolutePath, durationOffset)
+            loadJpegData(db.files[0].absolutePath)
         }
         dragEvent.isDropCompleted = true
         dragEvent.consume()
@@ -80,9 +79,9 @@ class MainWindowController {
         return Duration.ofHours(hours.toLong()).plus(Duration.ofMinutes(minutes.toLong()))
     }
 
-    private fun loadJpegData(path: String, durationOffset: Duration) {
+    private fun loadJpegData(path: String) {
         try {
-            val creationTime = jpegReader.readCreationTime(path, durationOffset)
+            val creationTime = jpegReader.readCreationTime(path)
             updateOutput(creationTime)
         } catch (e: InvalidJpegInputFileException) {
             jpegInputArea.text = e.message
@@ -100,6 +99,11 @@ class MainWindowController {
     }
 
     private fun updateOutput(time: Instant) {
-        outputTextArea.text = locationInTimeTextProvider.textForTime(time)
+        outputTextArea.text = locationInTimeTextProvider.textForChangedTime(time)
+    }
+
+    @FXML
+    fun handleComboBoxChange() {
+        outputTextArea.text = locationInTimeTextProvider.textForChangedDifferenceToUtc(timeZoneOffsetComboBox.value)
     }
 }
