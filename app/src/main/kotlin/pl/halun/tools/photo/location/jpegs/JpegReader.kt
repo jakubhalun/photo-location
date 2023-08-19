@@ -13,10 +13,21 @@ class JpegReader {
 
     private fun getOriginalCreationDate(path: String): Instant {
         val file = File(path)
-        val metadata: Metadata = ImageMetadataReader.readMetadata(file)
+        if (!file.exists()) throw InvalidJpegInputFileException("File does not exist!")
+        if (file.isDirectory) throw InvalidJpegInputFileException("Single JPEG file is required, not a directory")
+
+        val metadata: Metadata = try {
+            ImageMetadataReader.readMetadata(file)
+        } catch (e: Exception) {
+            println(e.message)
+            throw InvalidJpegInputFileException("Invalid metadata. Not an image?")
+        }
+        if (metadata.hasErrors()) throw InvalidJpegInputFileException("Invalid metadata. Not an image?")
 
         val directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory::class.java)
-        return directory?.getDate(ExifIFD0Directory.TAG_DATETIME_ORIGINAL)
+            ?: throw InvalidJpegInputFileException("This file does not contain valid EXIF")
+
+        return directory.getDate(ExifIFD0Directory.TAG_DATETIME_ORIGINAL)
             ?.toInstant() ?: throw InvalidJpegInputFileException("Cannot find creation date")
     }
 }
