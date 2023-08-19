@@ -5,6 +5,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.Insets?>
 <GridPane
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="pl.halun.tools.photo.location.MainWindowController"
@@ -21,8 +23,9 @@
 
     <!-- Define row constraints -->
     <rowConstraints>
+        <RowConstraints percentHeight="40"/>
         <RowConstraints percentHeight="50"/>
-        <RowConstraints percentHeight="50"/>
+        <RowConstraints percentHeight="10"/>
     </rowConstraints>
 
     <!-- TextArea for JPEG -->
@@ -71,12 +74,18 @@
         Awaiting dragged and dropped input
     </TextArea>
 
+    <Pane fx:id="comboBoxContainer"
+          GridPane.rowIndex="2"
+          GridPane.columnIndex="0"
+          GridPane.columnSpan="2"
+          GridPane.rowSpan="1">
+        <padding>
+            <Insets top="0" right="0" bottom="0" left="25"/>
+        </padding>
+        <ComboBox fx:id="timeZoneOffsetComboBox"
+                  value="+00:00"
+                  items="${controller.timeZoneOffsets}">
+        </ComboBox>
+    </Pane>
 
-    <ComboBox fx:id="timeZoneOffsetComboBox"
-              GridPane.rowIndex="2"
-              GridPane.columnIndex="0"
-              GridPane.columnSpan="2"
-              GridPane.rowSpan="1"
-              items="${controller.timeZoneOffsets}">
-    </ComboBox>
 </GridPane>
