@@ -27,7 +27,7 @@ class JpegReader {
         val directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory::class.java)
             ?: throw InvalidJpegInputFileException("This file does not contain valid EXIF")
 
-        return directory.getDate(ExifIFD0Directory.TAG_DATETIME_ORIGINAL)
+        return directory.getDate(ExifIFD0Directory.TAG_DATETIME)
             ?.toInstant() ?: throw InvalidJpegInputFileException("Cannot find creation date")
     }
 }

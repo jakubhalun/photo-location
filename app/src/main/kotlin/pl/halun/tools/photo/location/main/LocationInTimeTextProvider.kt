@@ -10,7 +10,7 @@ class LocationInTimeTextProvider {
 
     fun textForTime(time: Instant): String {
         this.time = time
-        return "jpeg"
+        return time.toString()
     }
 
     fun textForLocations(): String {
