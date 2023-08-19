@@ -4,6 +4,7 @@ import javafx.fxml.FXML
 import javafx.scene.control.TextArea
 import javafx.scene.input.DragEvent
 import javafx.scene.input.Dragboard
+import javafx.scene.input.TransferMode
 import pl.halun.tools.photo.location.jpegs.InvalidJpegInputFileException
 import pl.halun.tools.photo.location.jpegs.JpegReader
 import pl.halun.tools.photo.location.kmls.KmlReader
@@ -27,6 +28,22 @@ class MainWindowController {
 
     @FXML
     lateinit var outputTextArea: TextArea
+
+    @FXML
+    fun onJpegDragOver(dragEvent: DragEvent) {
+        if (dragEvent.dragboard.hasFiles()) {
+            dragEvent.acceptTransferModes(TransferMode.COPY)
+        }
+        dragEvent.consume()
+    }
+
+    @FXML
+    fun onKmlDragOver(dragEvent: DragEvent) {
+        if (dragEvent.dragboard.hasFiles()) {
+            dragEvent.acceptTransferModes(TransferMode.COPY)
+        }
+        dragEvent.consume()
+    }
 
     @FXML
     fun onJpegDrop(dragEvent: DragEvent) {
