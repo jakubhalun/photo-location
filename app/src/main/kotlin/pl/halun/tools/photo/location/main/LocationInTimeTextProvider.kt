@@ -5,7 +5,10 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-class LocationInTimeTextProvider() {
+class LocationInTimeTextProvider(
+    private val closestLocationFinder: ClosestLocationFinder,
+    private val textFormatter: LocationResultTextFormatter
+) {
 
     private var travelPoints: List<TravelPoint> = emptyList()
     private var time: Instant? = null
@@ -50,7 +53,8 @@ class LocationInTimeTextProvider() {
             } else if (shortMismatchBetweenJpegAndKml()) {
                 "The JPEG creation time is outside of tracked travel points times (wrong selection of time zone?). ${trackedTime()}"
             } else {
-                "TODO"
+                val result = closestLocationFinder.findClosest(travelPoints, timeWithDuration!!)
+                textFormatter.prepareText(result)
             }
         } else {
             "Missing part of information to generate report"
