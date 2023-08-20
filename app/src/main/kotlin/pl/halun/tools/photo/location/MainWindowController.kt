@@ -1,5 +1,6 @@
 package pl.halun.tools.photo.location
 
+import javafx.application.Platform
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.fxml.FXML
@@ -16,6 +17,7 @@ import pl.halun.tools.photo.location.kmls.TravelPoint
 import pl.halun.tools.photo.location.main.LocationInTimeTextProvider
 import java.time.Instant
 
+
 class MainWindowController {
 
     private val locationInTimeTextProvider: LocationInTimeTextProvider
@@ -30,6 +32,9 @@ class MainWindowController {
 
     @FXML
     lateinit var jpegInputArea: TextArea
+
+    @FXML
+    lateinit var kmlInputArea: TextArea
 
     @FXML
     lateinit var outputTextArea: TextArea
@@ -88,20 +93,25 @@ class MainWindowController {
     fun onKmlDrop(dragEvent: DragEvent) {
         val db: Dragboard = dragEvent.dragboard
         if (db.hasFiles()) {
+            kmlInputArea.text = "Loading..."
             loadKmlData(db.files[0].absolutePath)
-            // outputTextArea.text =
         }
         dragEvent.isDropCompleted = true
         dragEvent.consume()
     }
 
     private fun loadKmlData(path: String) =
-        try {
-            val travelPoints = kmlReader.readTravelPoints(path)
-            updateOutput(travelPoints)
-        } catch (e: InvalidKmlInputFileException) {
-            outputTextArea.text = e.message
-        }
+        Thread {
+            try {
+                val travelPoints = kmlReader.readTravelPoints(path)
+                Platform.runLater {
+                    updateOutput(travelPoints)
+                    kmlInputArea.text = "Loaded ${locationInTimeTextProvider.numberOfTravelPoints()} travel points"
+                }
+            } catch (e: InvalidKmlInputFileException) {
+                Platform.runLater { outputTextArea.text = e.message }
+            }
+        }.start()
 
     private fun updateOutput(travelPoints: List<TravelPoint>) {
         outputTextArea.text = locationInTimeTextProvider.textForChangedLocations(travelPoints)

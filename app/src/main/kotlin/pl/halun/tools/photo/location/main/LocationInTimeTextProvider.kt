@@ -11,6 +11,8 @@ class LocationInTimeTextProvider {
     private var differenceToUtc: Duration = Duration.ZERO
     private var timeWithDuration: Instant? = null
 
+    fun numberOfTravelPoints(): Int = travelPoints.size
+
     fun textForChangedTime(time: Instant): String {
         this.time = time
         return time.toString()
