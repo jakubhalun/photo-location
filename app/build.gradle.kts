@@ -1,6 +1,7 @@
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.8.20"
     id("org.openjfx.javafxplugin") version "0.0.13"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     application
 }
 
@@ -28,7 +29,7 @@ java {
 
 application {
     mainClass.set("pl.halun.tools.photo.location.AppKt")
-    applicationDefaultJvmArgs = listOf("--module-path", "\$APP_HOME/lib", "--add-modules", "javafx.web", "javafx.controls")
+    applicationDefaultJvmArgs = listOf("--add-modules", "javafx.web", "javafx.controls")
 }
 
 tasks.named<Test>("test") {
@@ -40,4 +41,9 @@ val javafxModules = arrayOf("controls", "fxml", "graphics")
 javafx {
     modules = listOf("javafx.controls", "javafx.fxml")
     version = "20.0.2"
+}
+
+tasks.shadowJar {
+    archiveClassifier.set("")
+    mergeServiceFiles()
 }
