@@ -2,6 +2,6 @@ package pl.halun.tools.photo.location.main
 
 class LocationResultTextFormatter {
     fun prepareText(locationResult: LocationResult): String {
-        return "TODO"
+        return locationResult.toString()
     }
 }
