@@ -30,7 +30,7 @@ class JpegReader {
         if (subIFDDirectory == null && exifIFD0Directory == null) throw InvalidJpegInputFileException("This file does not contain valid EXIF")
 
         return subIFDDirectory?.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL)?.toInstant()
-            ?: exifIFD0Directory.getDate(ExifIFD0Directory.TAG_DATETIME)?.toInstant()
+            ?: exifIFD0Directory?.getDate(ExifIFD0Directory.TAG_DATETIME)?.toInstant()
             ?: throw InvalidJpegInputFileException("Cannot find creation date")
     }
 }
