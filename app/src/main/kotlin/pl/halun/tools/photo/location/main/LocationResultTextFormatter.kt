@@ -21,6 +21,7 @@ Point closest in time:
 ${formatPoint(locationResult.closestInTime)}
 
 Stops nearby (in time):
+
 ${formatList(locationResult.stopPoints)}
 """.trimIndent()
 
@@ -30,8 +31,8 @@ ${formatList(locationResult.stopPoints)}
 
     private fun formatPoint(point: TravelPoint): String = """
 Latitude: ${point.location.latitude}, Longitude: ${point.location.longitude}, time=${instantInformation(point.timeUtc)}
-Commons template: {{Location|${point.location.longitude}|${point.location.latitude}}}
-Google Maps Link: https://maps.google.com/maps?ll=${point.location.longitude},${point.location.latitude}&spn=0.01,0.01&t=h&q=${point.location.longitude},${point.location.latitude}
+Commons template: {{Location|${point.location.latitude}|${point.location.longitude}}}
+Google Maps Link: https://maps.google.com/maps?ll=${point.location.latitude},${point.location.longitude}&spn=0.01,0.01&t=h&q=${point.location.latitude},${point.location.longitude}
 """.trimIndent()
 
 }

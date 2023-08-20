@@ -37,7 +37,7 @@ class KmlReader {
         return coords.zip(times).map { (coordinates, time) ->
             val parts = coordinates.split(" ").map { it.toDouble() }
             TravelPoint(
-                location = Location(longitude = parts[1], latitude = parts[0]),
+                location = Location(latitude = parts[1], longitude = parts[0]),
                 timeUtc = Instant.parse(time)
             )
         }
@@ -45,7 +45,7 @@ class KmlReader {
 
 }
 
-data class Location(val longitude: Double, val latitude: Double)
+data class Location(val latitude: Double, val longitude: Double)
 
 data class TravelPoint(val location: Location, val timeUtc: Instant)
 
