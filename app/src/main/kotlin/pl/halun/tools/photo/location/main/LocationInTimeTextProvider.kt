@@ -13,6 +13,8 @@ class LocationInTimeTextProvider {
 
     fun numberOfTravelPoints(): Int = travelPoints.size
 
+    fun loadedTime(): String = time?.toString() ?: throw IllegalStateException("Timestamp not set yet")
+
     fun textForChangedTime(time: Instant): String {
         this.time = time
         return time.toString()

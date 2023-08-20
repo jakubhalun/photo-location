@@ -81,6 +81,7 @@ class MainWindowController {
         try {
             val creationTime = jpegReader.readCreationTime(path)
             updateOutput(creationTime)
+            jpegInputArea.text = locationInTimeTextProvider.loadedTime()
         } catch (e: InvalidJpegInputFileException) {
             jpegInputArea.text = e.message
         }
@@ -109,7 +110,7 @@ class MainWindowController {
                     kmlInputArea.text = "Loaded ${locationInTimeTextProvider.numberOfTravelPoints()} travel points"
                 }
             } catch (e: InvalidKmlInputFileException) {
-                Platform.runLater { outputTextArea.text = e.message }
+                Platform.runLater { kmlInputArea.text = e.message }
             }
         }.start()
 
