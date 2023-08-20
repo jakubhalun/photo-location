@@ -27,7 +27,7 @@ class LocationInTimeTextProviderTest {
 
         // Set up a default scenario
         every { closestLocationFinder.findClosest(any(), any()) } returns mockk()
-        every { textFormatter.prepareText(any()) } returns "Some text"
+        every { textFormatter.prepareText(any(), any()) } returns "Some text"
     }
 
     @Test

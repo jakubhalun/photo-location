@@ -54,7 +54,7 @@ class LocationInTimeTextProvider(
                 "The JPEG creation time is outside of tracked travel points times (wrong selection of time zone?). ${trackedTime()}"
             } else {
                 val result = closestLocationFinder.findClosest(travelPoints, timeWithDuration!!)
-                textFormatter.prepareText(result)
+                textFormatter.prepareText(result, timeWithDuration!!)
             }
         } else {
             "Missing part of information to generate report"
