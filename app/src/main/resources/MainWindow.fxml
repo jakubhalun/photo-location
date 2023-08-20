@@ -6,7 +6,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.web.WebView?>
 <GridPane
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="pl.halun.tools.photo.location.MainWindowController"
@@ -60,17 +59,15 @@
         Drag and drop KML file
     </TextArea>
 
-    <WebView
-            fx:id="outputWebView"
+    <TextArea
+            fx:id="outputTextArea"
             style="-fx-border-color: lightgray;"
+            wrapText="true"
+            editable="false"
             GridPane.rowIndex="1"
             GridPane.columnIndex="0"
             GridPane.columnSpan="2"
             GridPane.rowSpan="1"
-            maxWidth="Infinity"
-            maxHeight="Infinity"
-            prefWidth="400"
-            prefHeight="200"
     />
 
     <Pane fx:id="comboBoxContainer"

@@ -9,15 +9,12 @@ import javafx.scene.control.TextArea
 import javafx.scene.input.DragEvent
 import javafx.scene.input.Dragboard
 import javafx.scene.input.TransferMode
-import javafx.scene.web.WebView
 import pl.halun.tools.photo.location.jpegs.InvalidJpegInputFileException
 import pl.halun.tools.photo.location.jpegs.JpegReader
 import pl.halun.tools.photo.location.kmls.InvalidKmlInputFileException
 import pl.halun.tools.photo.location.kmls.KmlReader
 import pl.halun.tools.photo.location.kmls.TravelPoint
 import pl.halun.tools.photo.location.main.LocationInTimeTextProvider
-import java.awt.Desktop
-import java.net.URI
 import java.time.Instant
 
 class MainWindowController {
@@ -39,7 +36,7 @@ class MainWindowController {
     lateinit var kmlInputArea: TextArea
 
     @FXML
-    lateinit var outputWebView: WebView
+    lateinit var outputTextArea: TextArea
 
     @FXML
     lateinit var timeZoneOffsetComboBox: ComboBox<String>
@@ -49,19 +46,6 @@ class MainWindowController {
             add(String.format("%+d:00", i))
             if (i != 12 && i != 13) {
                 add(String.format("%+d:30", i))
-            }
-        }
-    }
-
-    private fun attachExternalLinkOpener() {
-        outputWebView.engine.locationProperty().addListener { _, oldValue, newValue ->
-            if (newValue != null && newValue != oldValue) {
-                outputWebView.engine.load("")  // Prevent WebView from navigating
-                Platform.runLater {
-                    if (Desktop.isDesktopSupported()) {
-                        Desktop.getDesktop().browse(URI(newValue))
-                    }
-                }
             }
         }
     }
@@ -102,9 +86,7 @@ class MainWindowController {
         }
 
     private fun updateOutput(time: Instant) {
-        val content = locationInTimeTextProvider.textForChangedTime(time)
-        outputWebView.engine.loadContent(html(content))
-        attachExternalLinkOpener()
+        outputTextArea.text = locationInTimeTextProvider.textForChangedTime(time)
     }
 
     @FXML
@@ -132,20 +114,11 @@ class MainWindowController {
         }.start()
 
     private fun updateOutput(travelPoints: List<TravelPoint>) {
-        val content = locationInTimeTextProvider.textForChangedLocations(travelPoints)
-        outputWebView.engine.loadContent(html(content))
-        attachExternalLinkOpener()
+        outputTextArea.text = locationInTimeTextProvider.textForChangedLocations(travelPoints)
     }
 
     @FXML
     fun handleComboBoxChange() {
-        val content = locationInTimeTextProvider.textForChangedDifferenceToUtc(timeZoneOffsetComboBox.value)
-        outputWebView.engine.loadContent(html(content))
-        attachExternalLinkOpener()
+        outputTextArea.text = locationInTimeTextProvider.textForChangedDifferenceToUtc(timeZoneOffsetComboBox.value)
     }
-
-    private fun html(content: String): String =
-            """
-                <html><body><p style="font-family:verdana">$content</p></body></html>
-            """.trimIndent()
 }

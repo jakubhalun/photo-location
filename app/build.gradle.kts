@@ -11,7 +11,6 @@ repositories {
 dependencies {
     implementation("org.openjfx:javafx-controls:20.0.2")
     implementation("org.openjfx:javafx-fxml:20.0.2")
-    implementation("org.openjfx:javafx-web:20.0.2")
     implementation("com.drewnoakes:metadata-extractor:2.18.0")
     implementation("org.dom4j:dom4j:2.1.4")
 
@@ -29,7 +28,7 @@ java {
 
 application {
     mainClass.set("pl.halun.tools.photo.location.AppKt")
-    applicationDefaultJvmArgs = listOf("--module-path", "\$APP_HOME/lib", "--add-modules", "javafx.web", "javafx.controls", "javafx.fxml")
+    applicationDefaultJvmArgs = listOf("--module-path", "\$APP_HOME/lib", "--add-modules", "javafx.web", "javafx.controls")
 }
 
 tasks.named<Test>("test") {
@@ -39,6 +38,6 @@ tasks.named<Test>("test") {
 val javafxModules = arrayOf("controls", "fxml", "graphics")
 
 javafx {
-    modules = listOf("javafx.controls", "javafx.fxml", "javafx.web")
+    modules = listOf("javafx.controls", "javafx.fxml")
     version = "20.0.2"
 }
