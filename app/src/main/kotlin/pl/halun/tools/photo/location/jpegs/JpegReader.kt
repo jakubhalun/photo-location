@@ -2,7 +2,9 @@ package pl.halun.tools.photo.location.jpegs
 
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.Metadata
+import com.drew.metadata.exif.ExifDirectoryBase
 import com.drew.metadata.exif.ExifIFD0Directory
+import com.drew.metadata.exif.ExifSubIFDDirectory
 import java.io.File
 import java.time.Instant
 
@@ -22,13 +24,14 @@ class JpegReader {
             println(e.message)
             throw InvalidJpegInputFileException("Invalid metadata. Not an image?")
         }
-        if (metadata.hasErrors()) throw InvalidJpegInputFileException("Invalid metadata. Not an image?")
 
-        val directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory::class.java)
-            ?: throw InvalidJpegInputFileException("This file does not contain valid EXIF")
+        val subIFDDirectory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+        val exifIFD0Directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory::class.java)
+        if (subIFDDirectory == null && exifIFD0Directory == null) throw InvalidJpegInputFileException("This file does not contain valid EXIF")
 
-        return directory.getDate(ExifIFD0Directory.TAG_DATETIME)
-            ?.toInstant() ?: throw InvalidJpegInputFileException("Cannot find creation date")
+        return subIFDDirectory?.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL)?.toInstant()
+            ?: exifIFD0Directory.getDate(ExifIFD0Directory.TAG_DATETIME)?.toInstant()
+            ?: throw InvalidJpegInputFileException("Cannot find creation date")
     }
 }
 
