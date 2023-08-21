@@ -11,7 +11,7 @@ class App : Application() {
         val loader = FXMLLoader(App::class.java.getResource("/MainWindow.fxml"))
         val root: Parent = loader.load()
 
-        primaryStage.title = "Photo Location"
+        primaryStage.title = "Photo Location (JPEG to KML Matcher)"
         primaryStage.scene = Scene(root)
         primaryStage.show()
     }

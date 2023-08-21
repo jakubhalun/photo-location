@@ -49,9 +49,9 @@ class LocationInTimeTextProvider(
     private fun generateText(): String =
         if (readyToGenerateText()) {
             if (longMismatchBetweenJpegAndKml()) {
-                "The JPEG creation time is well outside of tracked travel points times (wrong selection of KML file?). ${trackedTime()}"
+                "The JPEG creation time is well outside of tracked travel points (wrong selection of KML file?). ${trackedTime()}"
             } else if (shortMismatchBetweenJpegAndKml()) {
-                "The JPEG creation time is outside of tracked travel points times (wrong selection of time zone?). ${trackedTime()}"
+                "The JPEG creation time is outside of tracked travel points (wrong selection of time zone?). ${trackedTime()}"
             } else {
                 val result = closestLocationFinder.findClosest(travelPoints, timeWithDuration!!)
                 textFormatter.prepareText(result, timeWithDuration!!)

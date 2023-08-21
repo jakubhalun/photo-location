@@ -22,17 +22,17 @@ class ClosestLocationFinder {
     }
 
     private fun findAllStopsCloseInTime(track: List<TravelPoint>, time: Instant): List<TravelPoint> {
-        val twoMinutes = Duration.ofMinutes(2)
-        val tenSeconds = Duration.ofSeconds(10)
+        val rangeOfSearchFromProvidedTime = Duration.ofMinutes(2)
+        val minimumBreakForStop = Duration.ofSeconds(10)
 
         val relevantTrack = track.filter { travelPoint ->
-            Duration.between(travelPoint.timeUtc, time).abs() <= twoMinutes
+            Duration.between(travelPoint.timeUtc, time).abs() <= rangeOfSearchFromProvidedTime
         }
 
         val stops = mutableListOf<TravelPoint>()
         for (i in 0 until relevantTrack.size - 1) {
             val diff = Duration.between(relevantTrack[i].timeUtc, relevantTrack[i + 1].timeUtc)
-            if (diff > tenSeconds) {
+            if (diff > minimumBreakForStop) {
                 stops.add(relevantTrack[i])
             }
         }

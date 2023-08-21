@@ -40,7 +40,7 @@ class LocationInTimeTextProviderTest {
 
         val result = provider.textForChangedTime(startOfTrackTime.minus(2, ChronoUnit.DAYS))
 
-        assertEquals("The JPEG creation time is well outside of tracked travel points times (wrong selection of KML file?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
+        assertEquals("The JPEG creation time is well outside of tracked travel points (wrong selection of KML file?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
     }
 
     @Test
@@ -53,7 +53,7 @@ class LocationInTimeTextProviderTest {
 
         val result = provider.textForChangedTime(endOfTrackTime.plus(2, ChronoUnit.DAYS))
 
-        assertEquals("The JPEG creation time is well outside of tracked travel points times (wrong selection of KML file?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
+        assertEquals("The JPEG creation time is well outside of tracked travel points (wrong selection of KML file?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
     }
 
     @Test
@@ -66,7 +66,7 @@ class LocationInTimeTextProviderTest {
 
         val result = provider.textForChangedTime(startOfTrackTime.minus(2, ChronoUnit.MINUTES))
 
-        assertEquals("The JPEG creation time is outside of tracked travel points times (wrong selection of time zone?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
+        assertEquals("The JPEG creation time is outside of tracked travel points (wrong selection of time zone?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
     }
 
     @Test
@@ -79,6 +79,6 @@ class LocationInTimeTextProviderTest {
 
         val result = provider.textForChangedTime(endOfTrackTime.plus(16, ChronoUnit.MINUTES))
 
-        assertEquals("The JPEG creation time is outside of tracked travel points times (wrong selection of time zone?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
+        assertEquals("The JPEG creation time is outside of tracked travel points (wrong selection of time zone?). Tracked time between $startOfTrackTime and $endOfTrackTime", result)
     }
 }

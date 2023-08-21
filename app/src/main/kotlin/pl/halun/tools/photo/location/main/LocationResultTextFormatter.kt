@@ -33,6 +33,6 @@ ${formatList(locationResult.stopPoints)}
 Latitude: ${point.location.latitude}, Longitude: ${point.location.longitude}, time=${instantInformation(point.timeUtc)}
 Commons template: {{Location|${point.location.latitude}|${point.location.longitude}}}
 Google Maps Link: https://maps.google.com/maps?ll=${point.location.latitude},${point.location.longitude}&spn=0.01,0.01&t=h&q=${point.location.latitude},${point.location.longitude}
-""".trimIndent()
 
+""".trimIndent()
 }

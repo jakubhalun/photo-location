@@ -78,7 +78,7 @@ class MainWindowController {
 
     private fun loadJpegData(path: String) =
         try {
-            val creationTime = jpegReader.readCreationTime(path)
+            val creationTime = jpegReader.getOriginalCreationDate(path)
             updateOutput(creationTime)
             jpegInputArea.text = locationInTimeTextProvider.loadedTime()
         } catch (e: InvalidJpegInputFileException) {

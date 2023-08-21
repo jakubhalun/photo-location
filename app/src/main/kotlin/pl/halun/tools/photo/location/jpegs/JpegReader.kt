@@ -9,30 +9,50 @@ import java.io.File
 import java.time.Instant
 
 class JpegReader {
-    fun readCreationTime(path: String): Instant {
-        return getOriginalCreationDate(path)
+    fun getOriginalCreationDate(path: String): Instant {
+        val file = getAndValidateFile(path)
+        val metadata = getAndValidateMetadata(file)
+        val directories = getAndValidateDirectories(metadata)
+
+        return directories.getOriginalCreationDate()
     }
 
-    private fun getOriginalCreationDate(path: String): Instant {
+    private fun getAndValidateFile(path: String): File {
         val file = File(path)
         if (!file.exists()) throw InvalidJpegInputFileException("File does not exist!")
         if (file.isDirectory) throw InvalidJpegInputFileException("Single JPEG file is required, not a directory")
+        return file
+    }
 
-        val metadata: Metadata = try {
+    private fun getAndValidateMetadata(file: File): Metadata =
+        try {
             ImageMetadataReader.readMetadata(file)
         } catch (e: Exception) {
             println(e.message)
             throw InvalidJpegInputFileException("Invalid metadata. Not an image?")
         }
 
-        val subIFDDirectory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
-        val exifIFD0Directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory::class.java)
-        if (subIFDDirectory == null && exifIFD0Directory == null) throw InvalidJpegInputFileException("This file does not contain valid EXIF")
+    private fun getAndValidateDirectories(metadata: Metadata): ExifDirectories {
+        val directories = ExifDirectories(
+            metadata.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java),
+            metadata.getFirstDirectoryOfType(ExifIFD0Directory::class.java)
+        )
+        if (!directories.isValid()) throw InvalidJpegInputFileException("This file does not contain valid EXIF")
+        return directories
+    }
+}
 
-        return subIFDDirectory?.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL)?.toInstant()
+data class ExifDirectories(
+    private val subIFDDirectory: ExifSubIFDDirectory?,
+    private val exifIFD0Directory: ExifIFD0Directory?
+) {
+    fun isValid(): Boolean = subIFDDirectory != null || exifIFD0Directory != null
+
+    fun getOriginalCreationDate(): Instant =
+        subIFDDirectory?.getDate(ExifDirectoryBase.TAG_DATETIME_ORIGINAL)?.toInstant()
             ?: exifIFD0Directory?.getDate(ExifIFD0Directory.TAG_DATETIME)?.toInstant()
             ?: throw InvalidJpegInputFileException("Cannot find creation date")
-    }
+
 }
 
 class InvalidJpegInputFileException(message: String): RuntimeException(message)

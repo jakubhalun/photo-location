@@ -59,6 +59,7 @@
         Drag and drop KML file
     </TextArea>
 
+    <!-- Output TextArea -->
     <TextArea
             fx:id="outputTextArea"
             style="-fx-border-color: lightgray;"
@@ -70,6 +71,7 @@
             GridPane.rowSpan="1"
     />
 
+    <!-- Difference to UTC selection -->
     <Pane fx:id="comboBoxContainer"
           GridPane.rowIndex="2"
           GridPane.columnIndex="0"

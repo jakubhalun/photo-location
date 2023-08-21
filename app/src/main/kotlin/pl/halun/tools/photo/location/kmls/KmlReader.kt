@@ -1,5 +1,6 @@
 package pl.halun.tools.photo.location.kmls
 
+import org.dom4j.Document
 import org.dom4j.DocumentHelper
 import java.io.File
 import java.time.Instant
@@ -7,16 +8,26 @@ import java.time.Instant
 class KmlReader {
 
     fun readTravelPoints(path: String): List<TravelPoint> {
+        val file = getAndValidateFile(path)
+        val document = getAndValidateKmlDocument(file)
+        return getAndValidateTimePointsFromKmlTrack(document)
+    }
+
+    private fun getAndValidateFile(path: String): File {
         val file = File(path)
         if (!file.exists()) throw InvalidKmlInputFileException("File does not exist")
         if (file.isDirectory) throw InvalidKmlInputFileException("Single KML file is required, not a directory")
+        return file
+    }
 
-        val document = try {
-            DocumentHelper.parseText(File(path).readText())
+    private fun getAndValidateKmlDocument(file: File): Document =
+        try {
+            DocumentHelper.parseText(file.readText())
         } catch (e: Exception) {
             throw InvalidKmlInputFileException("Not a valid XML (KML) file")
         }
 
+    private fun getAndValidateTimePointsFromKmlTrack(document: Document): List<TravelPoint> {
         // Handle namespaces for gx:coord within gx:Track
         val xPathCoord = document.createXPath("//gx:Track/gx:coord")
         xPathCoord.setNamespaceURIs(mapOf("gx" to "http://www.google.com/kml/ext/2.2"))
@@ -42,7 +53,6 @@ class KmlReader {
             )
         }
     }
-
 }
 
 data class Location(val latitude: Double, val longitude: Double)
