@@ -45,7 +45,7 @@ class LocationInTimeProvider(
     }
 
     private fun prepareResult(): Result =
-        if (readyToGenerateText()) {
+        if (readyToGenerateReport()) {
             if (longMismatchBetweenJpegAndKml()) {
                 InvalidResult(
                     "The JPEG creation time is well outside of tracked travel points (wrong selection of KML file?). ${trackedTime()}"
@@ -61,7 +61,7 @@ class LocationInTimeProvider(
             InvalidResult("Missing part of information to generate report")
         }
 
-    private fun readyToGenerateText() = travelPoints.isNotEmpty() && timeWithDuration != null
+    private fun readyToGenerateReport() = travelPoints.isNotEmpty() && timeWithDuration != null
 
     private fun longMismatchBetweenJpegAndKml(): Boolean {
         val startOfTrack = travelPoints.first()
