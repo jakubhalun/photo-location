@@ -14,19 +14,21 @@ import pl.halun.tools.photo.location.jpegs.JpegReader
 import pl.halun.tools.photo.location.kmls.InvalidKmlInputFileException
 import pl.halun.tools.photo.location.kmls.KmlReader
 import pl.halun.tools.photo.location.kmls.TravelPoint
-import pl.halun.tools.photo.location.main.LocationInTimeTextProvider
+import pl.halun.tools.photo.location.main.*
 import java.time.Instant
 
 class MainWindowController {
 
-    private val locationInTimeTextProvider: LocationInTimeTextProvider
+    private val locationInTimeProvider: LocationInTimeProvider
     private val jpegReader: JpegReader
     private val kmlReader: KmlReader
+    private val textFormatter: LocationResultTextFormatter
     init {
         val configuration = Configuration()
-        locationInTimeTextProvider = configuration.locationInTimeTextProvider()
+        locationInTimeProvider = configuration.locationInTimeTextProvider()
         jpegReader = configuration.jpegReader()
         kmlReader = configuration.kmlReader()
+        textFormatter = configuration.locationResultTextFormatter()
     }
 
     @FXML
@@ -80,13 +82,15 @@ class MainWindowController {
         try {
             val creationTime = jpegReader.getOriginalCreationDate(path)
             updateOutput(creationTime)
-            jpegInputArea.text = locationInTimeTextProvider.loadedTime()
+            jpegInputArea.text = locationInTimeProvider.loadedTime()
         } catch (e: InvalidJpegInputFileException) {
             jpegInputArea.text = e.message
         }
 
     private fun updateOutput(time: Instant) {
-        outputTextArea.text = locationInTimeTextProvider.textForChangedTime(time)
+        outputTextArea.text = getOutputTextForResult(
+            locationInTimeProvider.resultForChangedTime(time)
+        )
     }
 
     @FXML
@@ -106,7 +110,7 @@ class MainWindowController {
                 val travelPoints = kmlReader.readTravelPoints(path)
                 Platform.runLater {
                     updateOutput(travelPoints)
-                    kmlInputArea.text = "Loaded ${locationInTimeTextProvider.numberOfTravelPoints()} travel points"
+                    kmlInputArea.text = "Loaded ${locationInTimeProvider.numberOfTravelPoints()} travel points"
                 }
             } catch (e: InvalidKmlInputFileException) {
                 Platform.runLater { kmlInputArea.text = e.message }
@@ -114,11 +118,21 @@ class MainWindowController {
         }.start()
 
     private fun updateOutput(travelPoints: List<TravelPoint>) {
-        outputTextArea.text = locationInTimeTextProvider.textForChangedLocations(travelPoints)
+        outputTextArea.text = getOutputTextForResult(
+            locationInTimeProvider.resultForChangedLocations(travelPoints)
+        )
     }
 
     @FXML
     fun handleComboBoxChange() {
-        outputTextArea.text = locationInTimeTextProvider.textForChangedDifferenceToUtc(timeZoneOffsetComboBox.value)
+        outputTextArea.text = getOutputTextForResult(
+            locationInTimeProvider.resultForChangedDifferenceToUtc(timeZoneOffsetComboBox.value)
+        )
     }
+
+    private fun getOutputTextForResult(result: Result): String =
+        when (result) {
+            is InvalidResult -> result.message
+            is LocationResult -> textFormatter.prepareText(result)
+        }
 }

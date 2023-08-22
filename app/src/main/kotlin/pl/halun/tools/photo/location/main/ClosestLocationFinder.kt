@@ -9,7 +9,8 @@ class ClosestLocationFinder {
         LocationResult(
             findLastBefore(track, time),
             findClosestInTime(track, time),
-            findAllStopsCloseInTime(track, time)
+            findAllStopsCloseInTime(track, time),
+            time
         )
 
     private fun findLastBefore(track: List<TravelPoint>, time: Instant): TravelPoint =

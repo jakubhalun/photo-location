@@ -5,11 +5,9 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-class LocationInTimeTextProvider(
-    private val closestLocationFinder: ClosestLocationFinder,
-    private val textFormatter: LocationResultTextFormatter
+class LocationInTimeProvider(
+    private val closestLocationFinder: ClosestLocationFinder
 ) {
-
     private var travelPoints: List<TravelPoint> = emptyList()
     private var time: Instant? = null
     private var differenceToUtc: Duration = Duration.ZERO
@@ -19,22 +17,22 @@ class LocationInTimeTextProvider(
 
     fun loadedTime(): String = time?.toString() ?: throw IllegalStateException("Timestamp not set yet")
 
-    fun textForChangedTime(time: Instant): String {
+    fun resultForChangedTime(time: Instant): Result {
         this.time = time
         timeWithDuration = time.plus(differenceToUtc)
-        return generateText()
+        return prepareResult()
     }
 
-    fun textForChangedLocations(travelPoints: List<TravelPoint>): String {
+    fun resultForChangedLocations(travelPoints: List<TravelPoint>): Result {
         this.travelPoints = travelPoints
-        return generateText()
+        return prepareResult()
     }
 
-    fun textForChangedDifferenceToUtc(difference: String): String {
+    fun resultForChangedDifferenceToUtc(difference: String): Result {
         val duration = differenceUtcForOffset(difference)
         this.differenceToUtc = duration
         time?.let { timeWithDuration = time!!.plus(duration) }
-        return generateText()
+        return prepareResult()
     }
 
     private fun differenceUtcForOffset(offsetString: String): Duration {
@@ -46,18 +44,21 @@ class LocationInTimeTextProvider(
         return Duration.ofHours(hours.toLong()).plus(Duration.ofMinutes(minutes.toLong()))
     }
 
-    private fun generateText(): String =
+    private fun prepareResult(): Result =
         if (readyToGenerateText()) {
             if (longMismatchBetweenJpegAndKml()) {
-                "The JPEG creation time is well outside of tracked travel points (wrong selection of KML file?). ${trackedTime()}"
+                InvalidResult(
+                    "The JPEG creation time is well outside of tracked travel points (wrong selection of KML file?). ${trackedTime()}"
+                )
             } else if (shortMismatchBetweenJpegAndKml()) {
-                "The JPEG creation time is outside of tracked travel points (wrong selection of time zone?). ${trackedTime()}"
+                InvalidResult(
+                    "The JPEG creation time is outside of tracked travel points (wrong selection of time zone?). ${trackedTime()}"
+                )
             } else {
-                val result = closestLocationFinder.findClosest(travelPoints, timeWithDuration!!)
-                textFormatter.prepareText(result, timeWithDuration!!)
+                closestLocationFinder.findClosest(travelPoints, timeWithDuration!!)
             }
         } else {
-            "Missing part of information to generate report"
+            InvalidResult("Missing part of information to generate report")
         }
 
     private fun readyToGenerateText() = travelPoints.isNotEmpty() && timeWithDuration != null

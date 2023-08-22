@@ -11,8 +11,8 @@ class LocationResultTextFormatter {
             .withZone(ZoneOffset.UTC)
     }
 
-    fun prepareText(locationResult: LocationResult, timeWithDuration: Instant): String = """
-JPEG creation time (after applying zone change): ${instantInformation(timeWithDuration)}
+    fun prepareText(locationResult: LocationResult): String = """
+JPEG creation time (after applying zone change): ${instantInformation(locationResult.photoTimeWithDuration)}
 
 Last point before:
 ${formatPoint(locationResult.lastBefore)}
