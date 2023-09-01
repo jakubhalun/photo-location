@@ -25,11 +25,11 @@ and speeding up the task of pinpointing photo locations.
   Given that most photos are taken while stationary, this data is crucial.
   * It also provides the point closest in time to when the photo was taken (either before
   or after the shot).
-  * Points where no movement was detected by Geo Tracker for over 10 seconds, termed as "stop points", are identified.
+  * Points where no movement was detected by Geo Tracker for over 10 seconds, termed as "stop points," are identified.
   These are sought within a time frame of 2 minutes before and after the photo was clicked.
   * Each of the mentioned points includes information about latitude and longitude, a template for the "Location" used
   in Wikimedia Commons with appropriately set parameters, and a link to Google Maps with those parameters.
-* **Time Adjustment Feature:** Often, the timestamp extracted from the JPEG might be in an incorrect timezone.
+* **Time Adjustment Feature:** the timestamp extracted from the JPEG might often be in an incorrect timezone.
 To rectify this, there's an option to adjust the timestamp relative to UTC. For instance, when I take photos
 in Poland during summer (observing Central European Summer Time), I set the adjustment to -2.00.
 
@@ -39,8 +39,8 @@ with the time on the phone. Only then can the photo's precise location be accura
 ### Disclaimer:
 This particular application was crafted primarily for personal use. It has undergone testing only with KML
 files produced by Geo Tracker. Users who opt to utilize this tool should be aware that it hasn't
-been subjected to extensive commercial-grade testing. I've made it available hoping it might be beneficial
-to others. However, those who choose to use it should proceed with caution and be mindful of its limitations.
+been subjected to extensive commercial-grade testing. I've made it available, hoping it might be beneficial
+to others. However, those who use it should proceed cautiously and be mindful of its limitations.
 
 ### Licensing:
 The application's code is available under the Apache License, Version 2.0, January 2004.
@@ -49,3 +49,11 @@ The application's code is available under the Apache License, Version 2.0, Janua
 ```
 ./gradlew shadowJar
 ```
+### Binary version
+* If you don't want to build the application yourself, you can use the JAR file built by me, [available here](https://drive.google.com/drive/folders/1_c_1Wsqzidcj243XkCU99KZyPhaLlgRO?usp=sharing).
+* You still need [Java in version 17](https://www.oracle.com/java/technologies/downloads/#java17), at least, installed in your system.
+
+
+
+
+https://drive.google.com/drive/folders/1_c_1Wsqzidcj243XkCU99KZyPhaLlgRO?usp=sharinghttps://drive.google.com/drive/folders/1_c_1Wsqzidcj243XkCU99KZyPhaLlgRO?usp=sharing
