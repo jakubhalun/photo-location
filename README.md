@@ -51,4 +51,4 @@ The application's code is available under the Apache License, Version 2.0, Janua
 ```
 ### Binary version
 * If you don't want to build the application yourself, you can use the JAR file built by me, [available here](https://drive.google.com/drive/folders/1_c_1Wsqzidcj243XkCU99KZyPhaLlgRO?usp=sharing).
-* You still need [Java in version 17](https://www.oracle.com/java/technologies/downloads/#java17), at least, installed in your system.
+* You still need [Java, in version 17 at least](https://www.oracle.com/java/technologies/downloads/#java17), installed in your system.
