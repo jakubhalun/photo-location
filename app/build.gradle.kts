@@ -36,6 +36,22 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
+tasks.named("distTar") {
+    dependsOn("shadowJar")
+}
+
+tasks.named("distZip") {
+    dependsOn("shadowJar")
+}
+
+tasks.named("startScripts") {
+    dependsOn("shadowJar")
+}
+
+tasks.named("startShadowScripts") {
+    dependsOn("jar")
+}
+
 val javafxModules = arrayOf("controls", "fxml", "graphics")
 
 javafx {
