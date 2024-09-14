@@ -1,16 +1,16 @@
 package pl.halun.tools.photo.location.kmls
 
-import org.dom4j.Document
-import org.dom4j.DocumentHelper
 import java.io.File
+import java.io.FileInputStream
 import java.time.Instant
+import javax.xml.stream.XMLInputFactory
+import javax.xml.stream.XMLStreamConstants
 
 class KmlReader {
 
     fun readTravelPoints(path: String): List<TravelPoint> {
         val file = getAndValidateFile(path)
-        val document = getAndValidateKmlDocument(file)
-        return getAndValidateTimePointsFromKmlTrack(document)
+        return getTravelPointsFromKmlTrack(file)
     }
 
     private fun getAndValidateFile(path: String): File {
@@ -20,38 +20,68 @@ class KmlReader {
         return file
     }
 
-    private fun getAndValidateKmlDocument(file: File): Document =
-        try {
-            DocumentHelper.parseText(file.readText())
-        } catch (e: Exception) {
-            throw InvalidKmlInputFileException("Not a valid XML (KML) file")
+    private fun getTravelPointsFromKmlTrack(file: File): List<TravelPoint> {
+        val travelPoints = mutableListOf<TravelPoint>()
+        val inputFactory = XMLInputFactory.newInstance()
+        FileInputStream(file).use { inputStream ->
+            val reader = inputFactory.createXMLStreamReader(inputStream)
+
+            var inGxTrack = false
+            val gxNamespaceURI = "http://www.google.com/kml/ext/2.2"
+            val kmlNamespaceURI = "http://www.opengis.net/kml/2.2"
+
+            val coordinates = mutableListOf<String>()
+            val times = mutableListOf<String>()
+
+            while (reader.hasNext()) {
+                when (reader.next()) {
+                    XMLStreamConstants.START_ELEMENT -> {
+                        val localName = reader.localName
+                        val namespaceURI = reader.namespaceURI ?: ""
+
+                        if (localName == "Track" && namespaceURI == gxNamespaceURI) {
+                            inGxTrack = true
+                        } else if (inGxTrack) {
+                            if (localName == "coord" && namespaceURI == gxNamespaceURI) {
+                                val coordinatesText = reader.elementText.trim()
+                                coordinates.add(coordinatesText)
+                            } else if (localName == "when" && namespaceURI == kmlNamespaceURI) {
+                                val whenText = reader.elementText.trim()
+                                times.add(whenText)
+                            }
+                        }
+                    }
+
+                    XMLStreamConstants.END_ELEMENT -> {
+                        val localName = reader.localName
+                        val namespaceURI = reader.namespaceURI ?: ""
+
+                        if (localName == "Track" && namespaceURI == gxNamespaceURI) {
+                            inGxTrack = false
+
+                            if (coordinates.size != times.size) {
+                                println(coordinates.size)
+                                println(times.size)
+                                throw InvalidKmlInputFileException("Mismatched gx:coord and when elements count")
+                            }
+
+                            travelPoints.addAll(coordinates.zip(times).map { (coordinates, time) ->
+                                val parts = coordinates.split(" ").map { it.toDouble() }
+                                TravelPoint(
+                                    location = Location(latitude = parts[1], longitude = parts[0]),
+                                    timeUtc = Instant.parse(time)
+                                )
+                            })
+
+                            coordinates.clear()
+                            times.clear()
+                        }
+                    }
+                }
+            }
+            reader.close()
         }
-
-    private fun getAndValidateTimePointsFromKmlTrack(document: Document): List<TravelPoint> {
-        // Handle namespaces for gx:coord within gx:Track
-        val xPathCoord = document.createXPath("//gx:Track/gx:coord")
-        xPathCoord.setNamespaceURIs(mapOf("gx" to "http://www.google.com/kml/ext/2.2"))
-        val coords = xPathCoord.selectNodes(document).map { it.text.trim() }
-
-        // Handle when elements within gx:Track using local-name to bypass namespaces
-        val xPathWhen = document.createXPath("//gx:Track/*[local-name()='when']")
-        val times = xPathWhen.selectNodes(document).map { it.text.trim() }
-
-        if (coords.isEmpty()) {
-            throw InvalidKmlInputFileException("Not a valid XML file - no gx:coord nodes")
-        }
-
-        if (coords.size != times.size) {
-            throw InvalidKmlInputFileException("Mismatched gx:coord (${coords.size}) and when (${times.size}) elements count")
-        }
-
-        return coords.zip(times).map { (coordinates, time) ->
-            val parts = coordinates.split(" ").map { it.toDouble() }
-            TravelPoint(
-                location = Location(latitude = parts[1], longitude = parts[0]),
-                timeUtc = Instant.parse(time)
-            )
-        }
+        return travelPoints
     }
 }
 
@@ -59,4 +89,4 @@ data class Location(val latitude: Double, val longitude: Double)
 
 data class TravelPoint(val location: Location, val timeUtc: Instant)
 
-class InvalidKmlInputFileException(message: String): RuntimeException(message)
+class InvalidKmlInputFileException(message: String) : RuntimeException(message)
