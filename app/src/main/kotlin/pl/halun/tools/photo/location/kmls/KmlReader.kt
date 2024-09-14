@@ -2,6 +2,9 @@ package pl.halun.tools.photo.location.kmls
 
 import java.io.File
 import java.io.FileInputStream
+import java.nio.charset.MalformedInputException
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.Instant
 import javax.xml.stream.XMLInputFactory
 import javax.xml.stream.XMLStreamConstants
@@ -17,7 +20,22 @@ class KmlReader {
         val file = File(path)
         if (!file.exists()) throw InvalidKmlInputFileException("File does not exist")
         if (file.isDirectory) throw InvalidKmlInputFileException("Single KML file is required, not a directory")
+        checkFileFormat(path)
         return file
+    }
+
+    private fun checkFileFormat(path: String) {
+        try {
+            val lines = Files.readAllLines(Paths.get(path))
+            val content = lines.joinToString(separator = "\n").trim()
+            if (!content.contains("<kml", ignoreCase = true)) {
+                throw InvalidKmlInputFileException("File is not a valid KML file (missing <kml> root element)")
+            }
+        } catch (e: MalformedInputException) {
+            throw InvalidKmlInputFileException("File encoding is invalid or file is not a text file")
+        } catch (e: Exception) {
+            throw InvalidKmlInputFileException("Error reading file: ${e.message}")
+        }
     }
 
     private fun getTravelPointsFromKmlTrack(file: File): List<TravelPoint> {
