@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.8.20"
+    id("org.jetbrains.kotlin.jvm") version "2.0.20"
     id("org.openjfx.javafxplugin") version "0.0.13"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     application
@@ -10,13 +10,13 @@ repositories {
 }
 
 dependencies {
-    implementation("org.openjfx:javafx-controls:20.0.2")
-    implementation("org.openjfx:javafx-fxml:20.0.2")
-    implementation("com.drewnoakes:metadata-extractor:2.18.0")
+    implementation("org.openjfx:javafx-controls:22.0.2")
+    implementation("org.openjfx:javafx-fxml:22.0.2")
+    implementation("com.drewnoakes:metadata-extractor:2.19.0")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
-    testImplementation("io.mockk:mockk:1.13.7")
+    testImplementation("io.mockk:mockk:1.13.12")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
