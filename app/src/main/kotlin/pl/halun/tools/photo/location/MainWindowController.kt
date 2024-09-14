@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea
 import javafx.scene.input.DragEvent
 import javafx.scene.input.Dragboard
 import javafx.scene.input.TransferMode
+import javafx.stage.Stage
 import pl.halun.tools.photo.location.jpegs.InvalidJpegInputFileException
 import pl.halun.tools.photo.location.jpegs.JpegReader
 import pl.halun.tools.photo.location.kmls.InvalidKmlInputFileException
@@ -16,6 +17,8 @@ import pl.halun.tools.photo.location.kmls.KmlReader
 import pl.halun.tools.photo.location.kmls.TravelPoint
 import pl.halun.tools.photo.location.main.*
 import java.time.Instant
+
+private const val MAX_TITLE_LENGTH = 180
 
 class MainWindowController {
 
@@ -82,15 +85,27 @@ class MainWindowController {
         try {
             val creationTime = jpegReader.getOriginalCreationDate(path)
             updateOutput(creationTime)
-            jpegInputArea.text = locationInTimeProvider.loadedTime()
+            updateWindowForSuccessfulJpegRead(path)
         } catch (e: InvalidJpegInputFileException) {
-            jpegInputArea.text = e.message
+            updateWindowForFailureInJpegRead(e.message)
         }
 
     private fun updateOutput(time: Instant) {
         outputTextArea.text = getOutputTextForResult(
             locationInTimeProvider.resultForChangedTime(time)
         )
+    }
+
+    private fun updateWindowForSuccessfulJpegRead(path: String) {
+        jpegInputArea.text = locationInTimeProvider.loadedTime()
+        val stage = jpegInputArea.scene.window as Stage
+        stage.title = "$DEFAULT_WINDOW_NAME: $path".take(MAX_TITLE_LENGTH)
+    }
+
+    private fun updateWindowForFailureInJpegRead(errorMessage: String?) {
+        jpegInputArea.text = errorMessage ?: "Error while reading JPEG file"
+        val stage = jpegInputArea.scene.window as Stage
+        stage.title = DEFAULT_WINDOW_NAME
     }
 
     @FXML

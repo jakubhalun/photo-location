@@ -2,7 +2,6 @@ package pl.halun.tools.photo.location.kmls
 
 import java.io.File
 import java.io.FileInputStream
-import java.nio.charset.MalformedInputException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.time.Instant
