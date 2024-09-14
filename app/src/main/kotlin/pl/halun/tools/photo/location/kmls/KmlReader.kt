@@ -26,15 +26,23 @@ class KmlReader {
 
     private fun checkFileFormat(path: String) {
         try {
-            val lines = Files.readAllLines(Paths.get(path))
-            val content = lines.joinToString(separator = "\n").trim()
-            if (!content.contains("<kml", ignoreCase = true)) {
-                throw InvalidKmlInputFileException("File is not a valid KML file (missing <kml> root element)")
+            Files.lines(Paths.get(path)).use { lines ->
+                val firstNonEmptyLine = lines
+                    .map { it.trim() }
+                    .filter { it.isNotEmpty() && !it.startsWith("<?xml") }
+                    .findFirst()
+
+                if (firstNonEmptyLine.isPresent) {
+                    val line = firstNonEmptyLine.get()
+                    if (!line.startsWith("<kml", ignoreCase = true)) {
+                        throw InvalidKmlInputFileException("File is not a valid KML file (missing <kml> root element)")
+                    }
+                } else {
+                    throw InvalidKmlInputFileException("File is empty or not a valid KML file")
+                }
             }
-        } catch (e: MalformedInputException) {
-            throw InvalidKmlInputFileException("File encoding is invalid or file is not a text file")
         } catch (e: Exception) {
-            throw InvalidKmlInputFileException("Error reading file: ${e.message}")
+            throw InvalidKmlInputFileException("File encoding is invalid or file is not a text file")
         }
     }
 
