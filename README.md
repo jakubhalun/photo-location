@@ -10,6 +10,10 @@ developed by Ilia Bogdanovich, to track my routes and subsequently export them t
 The software I've developed facilitates a more efficient search through these KML files, significantly simplifying
 and speeding up the task of pinpointing photo locations.
 
+### Screenshot
+
+![Application window](docs/photo_location_printscreen_202605.png)
+
 ### How It Works
 * **Platform:** It's a desktop application developed using JavaFX.
 * **Prerequisites:** Users need to have the [Java FX SDK](https://openjfx.io/) installed, and Java 17 is also required.
@@ -18,7 +22,8 @@ and speeding up the task of pinpointing photo locations.
   the application extracts the original creation timestamp from its EXIF metadata.
   * The second field is for a KML file. Upon dragging and dropping a valid KML file,
   the app fetches the entire route - pinpointing locations at specific timestamps.
-  * The third field displays the search result.
+  * The output panel displays the search result as a rich interactive view with clickable links
+  and copy buttons. A **📄 Copy all as text** button at the top copies the full result to the clipboard.
 * **Output Information:**
   * The application offers the last recorded point before the photo was taken.
   I noticed that Geo Tracker doesn't record a new point until there's movement.
@@ -27,11 +32,12 @@ and speeding up the task of pinpointing photo locations.
   or after the shot).
   * Points where no movement was detected by Geo Tracker for over 10 seconds, termed as "stop points," are identified.
   These are sought within a time frame of 2 minutes before and after the photo was clicked.
-  * Each of the mentioned points includes information about latitude and longitude, a template for the "Location" used
-  in Wikimedia Commons with appropriately set parameters, and a link to Google Maps with those parameters.
+  * Each of the mentioned points includes latitude and longitude, a **Commons template** (with a copy button),
+  and clickable links to OpenStreetMap and Google Maps.
 * **Time Adjustment Feature:** the timestamp extracted from the JPEG might often be in an incorrect timezone.
-To rectify this, there's an option to adjust the timestamp relative to UTC. For instance, when I take photos
-in Poland during summer (observing Central European Summer Time), I set the adjustment to -2.00.
+To rectify this, there's an option to adjust the timestamp relative to UTC — this value is *added* to the
+photo timestamp, so it is the inverse of the camera's timezone. For instance, when I take photos
+in Poland during summer (observing Central European Summer Time, UTC+2), I set the adjustment to -2:00.
 
 For the effective use of this application, it's crucial to synchronize the time of the camera
 with the time on the phone. Only then can the photo's precise location be accurately determined.
