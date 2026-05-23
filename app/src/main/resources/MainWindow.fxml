@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 <GridPane
         xmlns:fx="http://javafx.com/fxml/1"
@@ -22,8 +25,8 @@
 
     <!-- Define row constraints -->
     <rowConstraints>
-        <RowConstraints percentHeight="40"/>
-        <RowConstraints percentHeight="50"/>
+        <RowConstraints percentHeight="25"/>
+        <RowConstraints percentHeight="65"/>
         <RowConstraints percentHeight="10"/>
     </rowConstraints>
 
@@ -32,7 +35,7 @@
             fx:id="jpegInputArea"
             wrapText="true"
             editable="false"
-            style="-fx-border-color: lightgray;"
+            style="-fx-border-color: lightgray; -fx-font-size: 16px;"
             onDragOver="#onJpegDragOver"
             onDragDropped="#onJpegDrop"
             GridPane.rowIndex="0"
@@ -48,7 +51,7 @@
             fx:id="kmlInputArea"
             wrapText="true"
             editable="false"
-            style="-fx-border-color: lightgray;"
+            style="-fx-border-color: lightgray; -fx-font-size: 16px;"
             onDragOver="#onKmlDragOver"
             onDragDropped="#onKmlDrop"
             GridPane.rowIndex="0"
@@ -59,20 +62,26 @@
         Drag and drop KML file
     </TextArea>
 
-    <!-- Output TextArea -->
-    <TextArea
-            fx:id="outputTextArea"
+    <!-- Output panel -->
+    <ScrollPane
             style="-fx-border-color: lightgray;"
-            wrapText="true"
-            editable="false"
+            fitToWidth="true"
             GridPane.rowIndex="1"
             GridPane.columnIndex="0"
             GridPane.columnSpan="2"
             GridPane.rowSpan="1"
-    />
+    >
+        <VBox fx:id="outputContainer" spacing="4">
+            <padding>
+                <Insets top="8" right="8" bottom="8" left="8"/>
+            </padding>
+        </VBox>
+    </ScrollPane>
 
-    <!-- Difference to UTC selection -->
-    <Pane fx:id="comboBoxContainer"
+    <!-- Time adjustment selection -->
+    <HBox fx:id="comboBoxContainer"
+          alignment="CENTER_LEFT"
+          spacing="10"
           GridPane.rowIndex="2"
           GridPane.columnIndex="0"
           GridPane.columnSpan="2"
@@ -80,11 +89,12 @@
         <padding>
             <Insets top="0" right="0" bottom="0" left="25"/>
         </padding>
+        <Label text="Camera time correction (add to photo time to get UTC, e.g. -2:00 for UTC+2 camera):"/>
         <ComboBox fx:id="timeZoneOffsetComboBox"
                   value="+00:00"
                   items="${controller.timeZoneOffsets}"
                   onAction="#handleComboBoxChange">
         </ComboBox>
-    </Pane>
+    </HBox>
 
 </GridPane>
