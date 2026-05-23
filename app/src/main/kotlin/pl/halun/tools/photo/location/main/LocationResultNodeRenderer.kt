@@ -4,6 +4,7 @@ import javafx.scene.Node
 import javafx.scene.control.Button
 import javafx.scene.control.Hyperlink
 import javafx.scene.control.Label
+import javafx.scene.control.Separator
 import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import javafx.scene.layout.HBox
@@ -21,6 +22,9 @@ class LocationResultNodeRenderer {
 
     fun renderNodes(result: LocationResult): List<Node> {
         val nodes = mutableListOf<Node>()
+
+        nodes += copyAllButton(result)
+        nodes += Separator()
 
         nodes += boldLabel("JPEG creation time (after applying zone change): ${formatter.format(result.photoTimeWithDuration)}")
         nodes += separator()
@@ -44,6 +48,40 @@ class LocationResultNodeRenderer {
         }
 
         return nodes
+    }
+
+    private fun copyAllButton(result: LocationResult): Button =
+        Button("📄 Copy all as text").apply {
+            setOnAction {
+                val content = ClipboardContent()
+                content.putString(toPlainText(result))
+                Clipboard.getSystemClipboard().setContent(content)
+            }
+        }
+
+    private fun toPlainText(result: LocationResult): String = """
+JPEG creation time (after applying zone change): ${formatter.format(result.photoTimeWithDuration)}
+
+Last point before:
+${formatPoint(result.lastBefore)}
+
+Point closest in time:
+${formatPoint(result.closestInTime)}
+
+Stops nearby (in time):
+
+${result.stopPoints.joinToString("\n") { formatPoint(it) }}
+""".trimIndent()
+
+    private fun formatPoint(point: TravelPoint): String {
+        val lat = point.location.latitude
+        val lon = point.location.longitude
+        return """
+Latitude: $lat, Longitude: $lon, time=${formatter.format(point.timeUtc)}
+Commons template: {{Location|$lat|$lon}}
+OpenStreetMap Link: https://www.openstreetmap.org/?mlat=$lat&mlon=$lon
+Google Maps Link: https://maps.google.com/maps?ll=$lat,$lon&spn=0.01,0.01&t=h&q=$lat,$lon
+""".trimIndent()
     }
 
     private fun renderPoint(point: TravelPoint): List<Node> {
