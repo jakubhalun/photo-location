@@ -5,10 +5,12 @@ import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.fxml.FXML
 import javafx.scene.control.ComboBox
+import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.scene.input.DragEvent
 import javafx.scene.input.Dragboard
 import javafx.scene.input.TransferMode
+import javafx.scene.layout.VBox
 import javafx.stage.Stage
 import pl.halun.tools.photo.location.jpegs.InvalidJpegInputFileException
 import pl.halun.tools.photo.location.jpegs.JpegReader
@@ -25,13 +27,13 @@ class MainWindowController {
     private val locationInTimeProvider: LocationInTimeProvider
     private val jpegReader: JpegReader
     private val kmlReader: KmlReader
-    private val textFormatter: LocationResultTextFormatter
+    private val resultRenderer: LocationResultNodeRenderer
     init {
         val configuration = Configuration()
         locationInTimeProvider = configuration.locationInTimeTextProvider()
         jpegReader = configuration.jpegReader()
         kmlReader = configuration.kmlReader()
-        textFormatter = configuration.locationResultTextFormatter()
+        resultRenderer = LocationResultNodeRenderer()
     }
 
     @FXML
@@ -41,7 +43,7 @@ class MainWindowController {
     lateinit var kmlInputArea: TextArea
 
     @FXML
-    lateinit var outputTextArea: TextArea
+    lateinit var outputContainer: VBox
 
     @FXML
     lateinit var timeZoneOffsetComboBox: ComboBox<String>
@@ -91,9 +93,7 @@ class MainWindowController {
         }
 
     private fun updateOutput(time: Instant) {
-        outputTextArea.text = getOutputTextForResult(
-            locationInTimeProvider.resultForChangedTime(time)
-        )
+        updateOutputDisplay(locationInTimeProvider.resultForChangedTime(time))
     }
 
     private fun updateWindowForSuccessfulJpegRead(path: String) {
@@ -133,21 +133,20 @@ class MainWindowController {
         }.start()
 
     private fun updateOutput(travelPoints: List<TravelPoint>) {
-        outputTextArea.text = getOutputTextForResult(
-            locationInTimeProvider.resultForChangedLocations(travelPoints)
-        )
+        updateOutputDisplay(locationInTimeProvider.resultForChangedLocations(travelPoints))
     }
 
     @FXML
     fun handleComboBoxChange() {
-        outputTextArea.text = getOutputTextForResult(
-            locationInTimeProvider.resultForChangedDifferenceToUtc(timeZoneOffsetComboBox.value)
-        )
+        updateOutputDisplay(locationInTimeProvider.resultForChangedDifferenceToUtc(timeZoneOffsetComboBox.value))
     }
 
-    private fun getOutputTextForResult(result: Result): String =
-        when (result) {
-            is InvalidResult -> result.message
-            is LocationResult -> textFormatter.prepareText(result)
-        }
+    private fun updateOutputDisplay(result: Result) {
+        outputContainer.children.setAll(
+            when (result) {
+                is InvalidResult -> listOf(Label(result.message))
+                is LocationResult -> resultRenderer.renderNodes(result)
+            }
+        )
+    }
 }
