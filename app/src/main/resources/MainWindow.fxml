@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.geometry.Insets?>
 <GridPane
         xmlns:fx="http://javafx.com/fxml/1"
@@ -71,8 +72,10 @@
             GridPane.rowSpan="1"
     />
 
-    <!-- Difference to UTC selection -->
-    <Pane fx:id="comboBoxContainer"
+    <!-- Time adjustment selection -->
+    <HBox fx:id="comboBoxContainer"
+          alignment="CENTER_LEFT"
+          spacing="10"
           GridPane.rowIndex="2"
           GridPane.columnIndex="0"
           GridPane.columnSpan="2"
@@ -80,11 +83,12 @@
         <padding>
             <Insets top="0" right="0" bottom="0" left="25"/>
         </padding>
+        <Label text="Camera time correction (add to photo time to get UTC, e.g. -2:00 for UTC+2 camera):"/>
         <ComboBox fx:id="timeZoneOffsetComboBox"
                   value="+00:00"
                   items="${controller.timeZoneOffsets}"
                   onAction="#handleComboBoxChange">
         </ComboBox>
-    </Pane>
+    </HBox>
 
 </GridPane>
