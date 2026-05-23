@@ -23,8 +23,8 @@
 
     <!-- Define row constraints -->
     <rowConstraints>
-        <RowConstraints percentHeight="40"/>
-        <RowConstraints percentHeight="50"/>
+        <RowConstraints percentHeight="25"/>
+        <RowConstraints percentHeight="65"/>
         <RowConstraints percentHeight="10"/>
     </rowConstraints>
 
@@ -33,7 +33,7 @@
             fx:id="jpegInputArea"
             wrapText="true"
             editable="false"
-            style="-fx-border-color: lightgray;"
+            style="-fx-border-color: lightgray; -fx-font-size: 16px;"
             onDragOver="#onJpegDragOver"
             onDragDropped="#onJpegDrop"
             GridPane.rowIndex="0"
@@ -49,7 +49,7 @@
             fx:id="kmlInputArea"
             wrapText="true"
             editable="false"
-            style="-fx-border-color: lightgray;"
+            style="-fx-border-color: lightgray; -fx-font-size: 16px;"
             onDragOver="#onKmlDragOver"
             onDragDropped="#onKmlDrop"
             GridPane.rowIndex="0"
