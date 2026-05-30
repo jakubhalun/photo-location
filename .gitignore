@@ -3,7 +3,9 @@
 *.log
 
 # Gradle files
-.gradle/
+.gradle/*
+!.gradle/wrapper/
+!.gradle/wrapper/gradle-wrapper.properties
 build/
 
 # JavaFX generated files
