@@ -57,4 +57,13 @@ The application's code is available under the Apache License, Version 2.0, Janua
 ```
 ### Binary version
 * If you don't want to build the application yourself, you can use the JAR file built by me, [available here](https://drive.google.com/drive/folders/1_c_1Wsqzidcj243XkCU99KZyPhaLlgRO?usp=sharing).
-* You still need [Java, in version 17 at least](https://www.oracle.com/java/technologies/downloads/#java17), installed in your system.
+* You still need [Java, in version 17 at least](https://www.oracle.com/java/technologies/downloads/#java17), installed in your system. If the application does not start, download and install a newer Java version first.
+* Run the downloaded JAR file from a terminal with:
+  ```
+  java -jar photo-location.jar
+  ```
+  Replace `photo-location.jar` with the actual downloaded file name.
+* On Windows, you can use `javaw` to start the application without keeping a console window open:
+  ```
+  javaw -jar photo-location.jar
+  ```
