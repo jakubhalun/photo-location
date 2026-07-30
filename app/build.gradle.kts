@@ -1,7 +1,8 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "2.0.20"
+    id("org.jetbrains.kotlin.jvm") version "2.4.10"
     id("org.openjfx.javafxplugin") version "0.1.0"
     id("com.gradleup.shadow") version "9.0.0"
+    id("com.gluonhq.gluonfx-gradle-plugin") version "1.0.29"
     application
 }
 
@@ -10,8 +11,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.openjfx:javafx-controls:22.0.2")
-    implementation("org.openjfx:javafx-fxml:22.0.2")
     implementation("com.drewnoakes:metadata-extractor:2.19.0")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -28,7 +27,17 @@ java {
 
 application {
     mainClass.set("pl.halun.tools.photo.location.AppKt")
-    applicationDefaultJvmArgs = listOf("--add-modules", "javafx.web", "javafx.controls")
+    applicationName = "photo-location"
+}
+
+gluonfx {
+    reflectionList = listOf(
+        "javafx.scene.Node",
+        "javafx.scene.control.ComboBox",
+        "javafx.scene.layout.GridPane",
+        "pl.halun.tools.photo.location.App",
+        "pl.halun.tools.photo.location.MainWindowController",
+    )
 }
 
 tasks.named<Test>("test") {
@@ -51,11 +60,9 @@ tasks.named("startShadowScripts") {
     dependsOn("jar")
 }
 
-val javafxModules = arrayOf("controls", "fxml", "graphics")
-
 javafx {
     modules = listOf("javafx.controls", "javafx.fxml")
-    version = "20.0.2"
+    version = "22.0.2"
 }
 
 tasks.shadowJar {
