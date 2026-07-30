@@ -31,6 +31,18 @@ application {
 }
 
 gluonfx {
+    bundlesList = listOf(
+        "com.sun.org.apache.xerces.internal.impl.msg.DOMMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.DatatypeMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.JAXPValidationMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.SAXMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.XIncludeMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.XMLMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.XMLSchemaMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.XMLSerializerMessages",
+        "com.sun.org.apache.xerces.internal.impl.msg.XPointerMessages",
+        "com.sun.org.apache.xerces.internal.impl.xpath.regex.message",
+    )
     reflectionList = listOf(
         "javafx.scene.Node",
         "javafx.scene.control.ComboBox",

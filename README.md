@@ -109,6 +109,12 @@ Native images are platform-specific, so configure and build on each target opera
 The executable is written below `app/build/gluonfx/<architecture>-<os>/`. Run it directly or use
 `./gradlew :app:nativeRun` (`gradlew.bat :app:nativeRun` on Windows).
 
+If a new dependency or file format uses reflection or resources that GraalVM cannot discover statically, run
+`./gradlew :app:nativeRunAgent` (`gradlew.bat :app:nativeRunAgent` on Windows). In the opened application,
+exercise every relevant workflow with representative JPEG, RAW, and KML files, then close it. Review and commit
+the configuration generated under `app/src/main/resources/META-INF/native-image/`, then rebuild with
+`:app:nativeBuild`. The agent records only the code paths exercised during that run.
+
 ### Binary version
 * If you don't want to build the application yourself, you can use the JAR file built by me, [available here](https://drive.google.com/drive/folders/1_c_1Wsqzidcj243XkCU99KZyPhaLlgRO?usp=sharing).
 * You still need [Java, in version 17 at least](https://www.oracle.com/java/technologies/downloads/#java17), installed in your system. If the application does not start, download and install a newer Java version first.
