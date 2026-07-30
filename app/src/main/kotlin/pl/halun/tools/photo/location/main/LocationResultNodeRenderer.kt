@@ -9,12 +9,12 @@ import javafx.scene.input.Clipboard
 import javafx.scene.input.ClipboardContent
 import javafx.scene.layout.HBox
 import pl.halun.tools.photo.location.kmls.TravelPoint
-import java.awt.Desktop
-import java.net.URI
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-class LocationResultNodeRenderer {
+class LocationResultNodeRenderer(
+    private val showDocument: (String) -> Unit,
+) {
     companion object {
         private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
             .withZone(ZoneOffset.UTC)
@@ -114,9 +114,7 @@ Google Maps Link: https://maps.google.com/maps?ll=$lat,$lon&spn=0.01,0.01&t=h&q=
     private fun hyperlink(text: String, url: String): Hyperlink =
         Hyperlink(text).apply {
             setOnAction {
-                Thread {
-                    Desktop.getDesktop().browse(URI(url))
-                }.start()
+                showDocument(url)
             }
         }
 

@@ -55,6 +55,66 @@ The application's code is available under the Apache License, Version 2.0, Janua
 ```
 ./gradlew shadowJar
 ```
+
+### Building a GraalVM native image
+
+Native-image builds require a separate [GraalVM installation supported by
+GluonFX](https://docs.gluonhq.com/#_platforms); a regular JDK is not sufficient. Download and extract the
+GraalVM archive for the host operating system. `GRAALVM_HOME` must point to the extracted JDK directory that
+contains `bin/native-image` (`bin/native-image.cmd` on Windows).
+
+Native images are platform-specific, so configure and build on each target operating system:
+
+* **Linux:** install the compiler and libraries listed in the GluonFX platform requirements, then run:
+  ```shell
+  export GRAALVM_HOME=/path/to/graalvm
+  export PATH="$GRAALVM_HOME/bin:$PATH"
+  native-image --version
+  ./gradlew :app:nativeBuild
+  ```
+* **macOS:** install the Xcode command-line tools with `xcode-select --install`, then run:
+  ```shell
+  export GRAALVM_HOME=/path/to/graalvm/Contents/Home
+  export PATH="$GRAALVM_HOME/bin:$PATH"
+  native-image --version
+  ./gradlew :app:nativeBuild
+  ```
+* **Windows:** GraalVM needs Microsoft's C/C++ compiler to create an `.exe`. The full Visual Studio IDE is
+  optional; either **Visual Studio Community** or the smaller **Build Tools for Visual Studio** package works.
+
+  1. If neither is installed, follow Microsoft's
+     [MSVC installation instructions](https://learn.microsoft.com/en-us/cpp/overview/acquire-msvc?view=msvc-170)
+     to download and start **Visual Studio Installer**.
+  2. In Windows Start, search for and open **Visual Studio Installer**. Find the installed Visual Studio or
+     Build Tools entry and click **Modify**. For a new installation, continue from the install screen instead.
+  3. In **Workloads**, select **Desktop development with C++**. In **Installation details**, ensure the C++
+     x64/x86 build tools and a **Windows 11 SDK** are selected, then click **Install** or **Modify**. The exact
+     MSVC version name depends on the installed Visual Studio release.
+  4. From Windows Start, open **x64 Native Tools Command Prompt** for that Visual Studio release, for example
+     **x64 Native Tools Command Prompt for VS 2022**. This is Command Prompt with `cl.exe` and `link.exe`
+     configured; an ordinary Command Prompt does not configure them automatically.
+
+  In that prompt, run:
+
+  ```batch
+  set GRAALVM_HOME=C:\path\to\graalvm
+  set PATH=%GRAALVM_HOME%\bin;%PATH%
+  where cl
+  where link
+  native-image.cmd --version
+  gradlew.bat :app:nativeBuild
+  ```
+  Both `where` commands must print a file path before starting the Gradle build.
+
+The executable is written below `app/build/gluonfx/<architecture>-<os>/`. Run it directly or use
+`./gradlew :app:nativeRun` (`gradlew.bat :app:nativeRun` on Windows).
+
+If a new dependency or file format uses reflection or resources that GraalVM cannot discover statically, run
+`./gradlew :app:nativeRunAgent` (`gradlew.bat :app:nativeRunAgent` on Windows). In the opened application,
+exercise every relevant workflow with representative JPEG, RAW, and KML files, then close it. Review and commit
+the configuration generated under `app/src/main/resources/META-INF/native-image/`, then rebuild with
+`:app:nativeBuild`. The agent records only the code paths exercised during that run.
+
 ### Binary version
 * If you don't want to build the application yourself, you can use the JAR file built by me, [available here](https://drive.google.com/drive/folders/1_c_1Wsqzidcj243XkCU99KZyPhaLlgRO?usp=sharing).
 * You still need [Java, in version 17 at least](https://www.oracle.com/java/technologies/downloads/#java17), installed in your system. If the application does not start, download and install a newer Java version first.

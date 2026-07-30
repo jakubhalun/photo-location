@@ -22,7 +22,9 @@ import java.time.Instant
 
 private const val MAX_TITLE_LENGTH = 180
 
-class MainWindowController {
+class MainWindowController(
+    showDocument: (String) -> Unit = {},
+) {
 
     private val locationInTimeProvider: LocationInTimeProvider
     private val jpegReader: JpegReader
@@ -33,7 +35,7 @@ class MainWindowController {
         locationInTimeProvider = configuration.locationInTimeTextProvider()
         jpegReader = configuration.jpegReader()
         kmlReader = configuration.kmlReader()
-        resultRenderer = LocationResultNodeRenderer()
+        resultRenderer = LocationResultNodeRenderer(showDocument)
     }
 
     @FXML

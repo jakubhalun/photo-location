@@ -11,6 +11,13 @@ const val DEFAULT_WINDOW_NAME = "Photo Location (JPEG to KML Matcher)"
 class App : Application() {
     override fun start(primaryStage: Stage) {
         val loader = FXMLLoader(App::class.java.getResource("/MainWindow.fxml"))
+        loader.setControllerFactory { controllerType ->
+            if (controllerType == MainWindowController::class.java) {
+                MainWindowController(hostServices::showDocument)
+            } else {
+                throw IllegalArgumentException("Unsupported FXML controller: ${controllerType.name}")
+            }
+        }
         val root: Parent = loader.load()
 
         primaryStage.title = DEFAULT_WINDOW_NAME
